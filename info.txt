@@ -1,0 +1,12 @@
+1. Create CPU Struct
+- Virtual CPU needs to store its internal states:
+i.e. registers, memory, PC, SP, flags etc.
+
+2. Load program into RAM and Fetching Instructions
+- Loads a program (binary) into RAM
+- Starts with program counter PC = 0
+- Repeats the following loop:
+    - fetch instruction at PC
+    - decode binary
+    - execute
+    - move PC forward unless it is a JMP
