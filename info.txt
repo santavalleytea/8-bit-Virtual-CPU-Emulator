@@ -10,3 +10,20 @@ i.e. registers, memory, PC, SP, flags etc.
     - decode binary
     - execute
     - move PC forward unless it is a JMP
+- Note that cpu is a pointer to the struct CPU
+- Additionally, when working with the actual struct (i.e. cpu like in main.c), 
+then you can use cpu.halted, cpu.register etc. if cpu is passed as a pointer (i.e. *cpu), 
+then use cpu->halted, cpu->register etc.
+
+3. Decode and Execute Instructions
+- Ceate cpu_step() function to fetch, decode and execute
+- LOAD R0, 5 means store value 5 into R0
+- When we encounter 0x10
+    - fetch the next bite -> register number (0 for R0)
+    - fetch another byte -> value to load
+    - store that value in chosen register
+
+4. Add Arithmetic Operations
+- e.g. ADD R0, R1 means R0 = R0 + R1, that is, take the value from R1, add to value
+of R0 and store the sum in R0.
+- 0x20 for ADD, 0x00 destination register R0, 0x01 source register R1
