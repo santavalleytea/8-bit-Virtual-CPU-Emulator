@@ -4,6 +4,8 @@
 
 void cpu_init(CPU *cpu) {
     memset(cpu, 0, sizeof(CPU));
+    cpu->sp = RAM_SIZE - 1; // Start stack at top of memory
+    // printf("%lu\n", sizeof(CPU));
 }
 
 void cpu_load_program(CPU *cpu, const uint8_t *program, size_t size) {
@@ -51,16 +53,55 @@ void cpu_step(CPU *cpu) {
             uint8_t reg_dest = cpu_fetch(cpu);
             uint8_t reg_src = cpu_fetch(cpu);
 
-            if (reg_dest < NUM_REGISTERS) {
-                uint8_t sum = cpu->registers[reg_dest] + cpu->registers[reg_src];
+            if (reg_dest < NUM_REGISTERS && reg_src < NUM_REGISTERS) {
+                uint8_t val_dest = cpu->registers[reg_dest];
+                uint8_t val_src = cpu->registers[reg_src];
+                uint8_t sum = val_dest + val_src;
+
                 cpu->registers[reg_dest] = sum;
-                printf("ADD R%d <- R%d (%d + %d = %d)\n", reg_dest, reg_src, 
-                cpu->registers[reg_dest], cpu->registers[reg_src], sum);
+
+                printf("ADD R%d <- R%d (%d + %d = %d)\n", reg_dest, reg_src, val_dest, val_src, sum);
             } else {
                 fprintf(stderr, "Invalid Register: R%d or R%d\n", reg_dest, reg_src);
                 cpu->halted = 1;
             }
 
+            break;
+        }
+
+        case OP_CMP: {
+            uint8_t reg_x = cpu_fetch(cpu);
+            uint8_t reg_y = cpu_fetch(cpu);
+
+            if (reg_x < NUM_REGISTERS && reg_y < NUM_REGISTERS) {
+                uint8_t val_x = cpu->registers[reg_x];
+                uint8_t val_y = cpu->registers[reg_y];
+                cpu->flag_zero = (val_x == val_y) ? 1 : 0;
+                printf("CMP R%d (%d) == R%d (%d) -> flag_zero = %d\n", reg_x, val_x,
+                reg_y, val_y, cpu->flag_zero);
+            } else {
+                fprintf(stderr, "Invalid Register: R%d or R%d\n", reg_x, reg_y);
+            }
+
+            break;
+        }
+
+        case OP_JE: {
+            uint8_t addr = cpu_fetch(cpu);
+            if (cpu->flag_zero) {
+                printf("JE to 0x%02X (flag_zero = 1)\n", addr);
+                cpu->pc = addr;
+            } else {
+                printf("JE skipped (flag_zero = 0)\n");
+            }
+
+            break;
+        }
+
+        case OP_JMP: {
+            uint8_t addr = cpu_fetch(cpu);
+            printf("JMP to 0x%02X\n", addr);
+            cpu->pc = addr;
             break;
         }
 

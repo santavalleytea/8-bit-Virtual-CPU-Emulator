@@ -27,3 +27,20 @@ then use cpu->halted, cpu->register etc.
 - e.g. ADD R0, R1 means R0 = R0 + R1, that is, take the value from R1, add to value
 of R0 and store the sum in R0.
 - 0x20 for ADD, 0x00 destination register R0, 0x01 source register R1
+
+5. Comparison and Conditional Jumps
+- CMP Rx, Ry; compare two registers, if equal then set the zero flag
+    - cpu->flag_zero = 1, else cpu->flag_zero = 0
+    - encoded as 0x30 reg_x reg_y
+- JE addr; jump if equal 
+    - if the zero flag is set, jump to the instruction at the given address
+    - encoded as 0x40 adrress
+
+6. Unconditional JMP implementation
+- Sets program counter to addr
+- encoded as 0x41 0x0A
+
+7. Function Calls and Stacks
+- CALL 0x10 jumps to address 0x10 but remembers where to return.
+- RET pops the return address and jumps back.
+- Use sp as stack pointer and implementing stack.
