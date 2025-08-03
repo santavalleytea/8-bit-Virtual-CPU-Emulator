@@ -22,6 +22,25 @@ uint8_t cpu_fetch(CPU *cpu) {
     return cpu->ram[cpu->pc++];
 }
 
+void push(CPU *cpu, uint8_t value) {
+    if (cpu->sp == 0) {
+        fprintf(stderr, "Stack overflow\n");
+        cpu->halted = 1;
+        return;
+    }
+    cpu->ram[cpu->sp--] = value;
+}
+
+uint8_t pop(CPU *cpu) {
+    if (cpu->sp == RAM_SIZE - 1) {
+        fprintf(stderr, "Stack overflow\n");
+        cpu->halted = 1;
+        return 0;
+    }
+
+    return cpu->ram[++cpu->sp];
+}
+
 /*
 Performs one full fetch-decode-execute cycle
 1. Fetch next instruction (opcode) from RAM at the program counter
@@ -102,6 +121,25 @@ void cpu_step(CPU *cpu) {
             uint8_t addr = cpu_fetch(cpu);
             printf("JMP to 0x%02X\n", addr);
             cpu->pc = addr;
+            break;
+        }
+
+        case OP_CALL: {
+            uint8_t addr = cpu_fetch(cpu);
+            // Push current pc onto the stack
+            push(cpu, cpu->pc);
+
+            // Jump to the function address
+            cpu->pc = addr;
+
+            printf("CALL 0x%02X (return to 0x%02X)", addr, cpu->pc);
+            break;
+        }
+
+        case OP_RET: {
+            uint8_t ret_addr = cpu_fetch(cpu);
+            cpu->pc = ret_addr;
+            printf("RET to 0x%02X\n", ret_addr);
             break;
         }
 

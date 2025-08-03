@@ -35,5 +35,9 @@ uint8_t cpu_fetch(CPU *cpu);
 // Performs one full fetch-decode-execute cycle
 void cpu_step(CPU *cpu);
 
+// Stack operations
+void push(CPU *cpu, uint8_t value);
+uint8_t pop(CPU *cpu);
+
 
 #endif
