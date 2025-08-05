@@ -143,6 +143,34 @@ void cpu_step(CPU *cpu) {
             break;
         }
 
+        case OP_PUSH: {
+            uint8_t reg = cpu_fetch(cpu);
+            if (reg < NUM_REGISTERS) {
+                uint8_t val = cpu->registers[reg];
+                push(cpu, val);
+                printf("PUSH R%d (%d)\n", reg, val);
+            } else {
+                fprintf(stderr, "Invalid register: R%d", reg);
+                cpu->halted = 1;
+            }
+
+            break;
+        }
+
+        case OP_POP: {
+            uint8_t reg = cpu_fetch(cpu);
+            if (reg < NUM_REGISTERS) {
+                uint8_t val = pop(cpu);
+                cpu->registers[reg] = val;
+                printf("POP R%d <- %d\n", reg, val);
+            } else {
+                fprintf(stderr, "Invalid register: R%d", reg);
+                cpu->halted = 1;
+            }
+
+            break;
+        }
+
         case OP_HALT: {
             cpu->halted = 1; // Set halted flag
             printf("HALT\n");

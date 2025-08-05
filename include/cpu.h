@@ -13,6 +13,8 @@
 #define OP_JMP 0x41
 #define OP_CALL 0x50
 #define OP_RET 0x51
+#define OP_PUSH 0x60
+#define OP_POP 0x61
 
 typedef struct {
     uint8_t registers[NUM_REGISTERS];   // R0 to R7

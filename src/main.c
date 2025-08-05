@@ -6,13 +6,11 @@ int main() {
     cpu_init(&cpu);
 
     uint8_t program[] = {
-        0x10, 0x00, 0x05, // LOAD R0, x
-        0x10, 0x01, 0x05, // LOAD R1, y
-        0x30, 0x00, 0x01,
-        0x40, 0x0A,
-        0xFF,              // HALT
-        0x10, 0x02, 0x99,
-        0xFF
+        0x10, 0x00, 0x2A,   // LOAD R0, 42
+        0x60, 0x00,         // PUSH R0
+        0x10, 0x00, 0x00,   // LOAD R0, 0 (overwrite)
+        0x61, 0x01,         // POP R1 (restore into R1)
+        0xFF                // HALT
     };
 
     cpu_load_program(&cpu, program, sizeof(program));

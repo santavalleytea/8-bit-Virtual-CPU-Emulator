@@ -44,3 +44,6 @@ of R0 and store the sum in R0.
 - CALL 0x10 jumps to address 0x10 but remembers where to return.
 - RET pops the return address and jumps back.
 - Use sp as stack pointer and implementing stack.
+
+8. Push and Pop Operations
+- 
