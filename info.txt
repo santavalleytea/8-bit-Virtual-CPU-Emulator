@@ -46,4 +46,8 @@ of R0 and store the sum in R0.
 - Use sp as stack pointer and implementing stack.
 
 8. Push and Pop Operations
+- Utilize implemented push pop function from 7
+
+9. Load Bytecode from File
+- File reading from binary file with fopen and fread
 - 

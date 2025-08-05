@@ -8,14 +8,18 @@ void cpu_init(CPU *cpu) {
     // printf("%lu\n", sizeof(CPU));
 }
 
-void cpu_load_program(CPU *cpu, const uint8_t *program, size_t size) {
-    if (size > RAM_SIZE) {
-        fprintf(stderr, "Program too large for RAM\n");
+void cpu_load_program(CPU *cpu, const char* filename) {
+    FILE *f = fopen(filename, "rb");
+    if (!f) {
+        perror("Error opening file");
+        cpu->halted = 1;
         return;
     }
 
-    // Copy program bytes into beginning of RAM
-    memcpy(cpu->ram, program, size);
+    size_t bytes_read = fread(cpu->ram, 1, RAM_SIZE, f);
+    fclose(f);
+
+    printf("Loaded %zu bytes into RAM from %s\n", bytes_read, filename);
 }
 
 uint8_t cpu_fetch(CPU *cpu) {

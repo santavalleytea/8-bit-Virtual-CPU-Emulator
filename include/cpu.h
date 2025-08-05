@@ -29,7 +29,7 @@ typedef struct {
 void cpu_init(CPU *cpu);
 
 // Loads a program (array of bytes) into RAM
-void cpu_load_program(CPU *cpu, const uint8_t *program, size_t size);
+void cpu_load_program(CPU *cpu, const char* filename);
 
 // Fetches next instruction and updates PC  
 uint8_t cpu_fetch(CPU *cpu);
